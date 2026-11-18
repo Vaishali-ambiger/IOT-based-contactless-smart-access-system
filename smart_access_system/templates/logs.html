@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Access Logs - Smart Access Digital Twin{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="kicker">Audit trail</p><h1 class="page-title">Access Logs</h1><p class="page-subtitle">Every completed simulated access decision, newest first.</p></div></div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Date</th><th>Time</th><th>RFID ID</th><th>RFID Status</th><th>Temperature</th><th>Mask</th><th>Decision</th><th>Door</th><th>Reason</th></tr></thead>
+<tbody>
+{% for log in logs %}<tr><td>{{ log.date }}</td><td>{{ log.time }}</td><td>{{ log.rfid_id }}</td><td>{{ log.rfid_status }}</td><td>{% if log.temperature is not none %}{{ log.temperature }}&deg;C{% else %}--{% endif %}</td><td>{{ log.mask_status }}</td><td class="{{ 'text-success' if log.decision == 'GRANTED' else 'text-danger' }}">{{ log.decision }}</td><td>{{ log.door_status }}</td><td>{{ log.reason }}</td></tr>{% else %}<tr><td colspan="9" class="empty-state">No access attempts recorded yet.</td></tr>{% endfor %}
+</tbody></table>
+</div>
+{% endblock %}

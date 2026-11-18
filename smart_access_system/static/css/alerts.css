@@ -1,0 +1,7 @@
+.alert-list { display: grid; gap: 12px; }
+.alert-card { display: flex; align-items: center; gap: 15px; padding: 18px 20px; border: 1px solid #f0d9ba; border-left: 4px solid var(--amber); border-radius: var(--radius); background: var(--white); box-shadow: var(--shadow); }
+.alert-symbol { display: grid; place-items: center; flex: 0 0 35px; width: 35px; height: 35px; border-radius: 50%; background: #fff1d7; color: var(--amber); font: 700 1.1rem 'Space Grotesk', sans-serif; }
+.alert-card strong { color: var(--navy); font-size: .88rem; }
+.alert-card p { margin: 4px 0 0; color: var(--muted); font-size: .73rem; }
+.alert-card p span { padding: 0 5px; color: #c4ccd7; }
+.alert-empty { border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); box-shadow: var(--shadow); }

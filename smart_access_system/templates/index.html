@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Smart Access & Safety Digital Twin{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <div><p class="kicker">Operations overview</p><h1 class="page-title">Smart Access &amp; Safety System</h1><p class="page-subtitle">Digital Twin <span>•</span> Smart Building Security</p></div>
+    <div class="heading-status"><i></i><span>System online</span><small>Live monitoring</small></div>
+</div>
+
+<!-- ============== STATUS CARDS ============== -->
+<div class="status-grid">
+    <div class="status-card status-card-online"><div class="card-icon">◉</div><div class="status-copy"><div class="status-label">System status</div><div class="status-value status-green">ONLINE</div><small>All services operational</small></div>
+    </div>
+
+    <div class="status-card"><div class="card-icon icon-blue">◈</div><div class="status-copy"><div class="status-label">RFID status</div><div class="status-value" id="card-rfid">{{ state.rfid_status }}</div><small>Credential verification</small></div>
+    </div>
+
+    <div class="status-card"><div class="card-icon icon-amber">°</div><div class="status-copy"><div class="status-label">Temperature</div><div class="status-value" id="card-temperature">
+            {% if state.temperature %}{{ state.temperature }}&deg;C{% else %}--{% endif %}
+        </div><small>Environmental safety check</small></div>
+    </div>
+
+    <div class="status-card"><div class="card-icon icon-teal">◆</div><div class="status-copy"><div class="status-label">Mask status</div><div class="status-value" id="card-mask">{{ state.mask_status }}</div><small>Entry requirement</small></div>
+    </div>
+
+    <div class="status-card"><div class="card-icon icon-violet">▣</div><div class="status-copy"><div class="status-label">Door status</div><div class="status-value" id="card-door">
+            {% if state.door_status == 'OPEN' %}🟢 OPEN{% else %}🔴 CLOSED{% endif %}
+        </div><small>Digital entrance state</small></div>
+    </div>
+
+    <div class="status-card"><div class="card-icon icon-coral">✓</div><div class="status-copy"><div class="status-label">Access decision</div><div class="status-value" id="card-decision">{{ state.decision }}</div><small>Latest control outcome</small></div>
+    </div>
+</div>
+
+<div class="stats-strip">
+    <div><span>Total attempts</span><strong id="stat-total">0</strong></div>
+    <div><span>Granted</span><strong class="status-green" id="stat-granted">0</strong></div>
+    <div><span>Denied</span><strong class="status-red" id="stat-denied">0</strong></div>
+    <div><span>Safety warnings</span><strong class="status-amber" id="stat-alerts">0</strong></div>
+</div>
+
+<div class="decision-banner" id="dashboard-reason"><span class="banner-dot"></span><span class="banner-text">{{ state.reason or 'No access decision yet.' }}</span></div>
+
+<!-- ============== DIGITAL TWIN VISUAL ============== -->
+<div class="twin-section">
+    <div class="section-heading"><div><p class="kicker">Live model</p><h2>Smart building entrance</h2></div><span class="live-tag"><i></i> Live twin</span></div>
+    <div class="building">
+        <div class="door-frame">
+            <div class="door" id="twin-door">
+                <span id="door-icon">🚪</span>
+                <span id="door-text">CLOSED</span>
+            </div>
+        </div>
+        <div class="twin-flow">
+            <div class="flow-step">
+                <span class="flow-icon">💳</span>
+                <span>RFID Scanner</span>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <span class="flow-icon">🌡️</span>
+                <span>Temperature Sensor</span>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <span class="flow-icon">😷</span>
+                <span>Mask Detection</span>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <span class="flow-icon">🔐</span>
+                <span>Access Control</span>
+            </div>
+        </div>
+    </div>
+    <a href="/simulation" class="btn btn-primary go-simulate-btn">Open access simulation <span>→</span></a>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // The dashboard refreshes itself every 2 seconds so it stays in
+    // sync with whatever is happening on the Access Simulation page.
+    refreshDashboard();
+    setInterval(refreshDashboard, 2000);
+</script>
+{% endblock %}

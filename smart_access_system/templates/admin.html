@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Admin - Smart Access Digital Twin{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="kicker">Configuration</p><h1 class="page-title">Admin controls</h1><p class="page-subtitle">Manage simulated credentials and safety settings.</p></div></div>
+{% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-stack">{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}{% endwith %}
+<div class="admin-grid">
+<section class="sim-card"><h2>Authorized RFID</h2><form method="post"><input type="hidden" name="action" value="add"><label for="add-rfid">RFID ID</label><input id="add-rfid" name="rfid_id" type="text" placeholder="e.g. RFID004"><button class="btn btn-primary" type="submit">ADD RFID</button></form>
+<form method="post" class="admin-form"><input type="hidden" name="action" value="remove"><label for="remove-rfid">Remove RFID</label><input id="remove-rfid" name="rfid_id" type="text" placeholder="e.g. RFID004"><button class="btn btn-danger" type="submit">REMOVE RFID</button></form>
+<h3>Currently Authorized</h3><ul class="rfid-list">{% for rfid in rfids %}<li>{{ rfid }}</li>{% else %}<li>No authorized RFID IDs.</li>{% endfor %}</ul></section>
+<section class="sim-card"><h2>Temperature Threshold</h2><form method="post"><input type="hidden" name="action" value="threshold"><label for="threshold">Safe threshold (&deg;C)</label><input id="threshold" name="threshold" type="number" step="0.1" min="0.1" value="{{ threshold }}"><button class="btn btn-primary" type="submit">UPDATE THRESHOLD</button></form><p class="hint">Current threshold: {{ threshold }}&deg;C. Temperatures at or below it are safe.</p></section>
+</div>
+{% endblock %}

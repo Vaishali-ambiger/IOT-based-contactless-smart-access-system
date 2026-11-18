@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Access Simulation - Smart Access & Safety Digital Twin{% endblock %}
+
+{% block content %}
+
+<div class="page-heading"><div><p class="kicker">Control panel</p><h1 class="page-title">Access Simulation</h1><p class="page-subtitle">Run a complete visitor entry check through the digital twin.</p></div></div>
+
+<div class="sim-layout">
+
+    <!-- ============== LEFT: CONTROLS ============== -->
+    <div class="sim-controls">
+
+        <!-- STEP 1: RFID -->
+        <div class="sim-card">
+            <h3>01 / RFID authentication</h3>
+            <input type="text" id="rfid-input" placeholder="e.g. RFID001" value="RFID001">
+            <button class="btn btn-primary" onclick="scanRfid()">SCAN RFID</button>
+            <div class="result-box" id="rfid-result">Waiting for Scan</div>
+            <p class="hint">Try authorized: RFID001, RFID002, RFID003. Try any other value to see it fail.</p>
+        </div>
+
+        <!-- STEP 2: TEMPERATURE -->
+        <div class="sim-card">
+            <h3>02 / Temperature simulation</h3>
+            <input type="number" id="temp-input" step="0.1" placeholder="e.g. 36.5" value="36.5"> °C
+            <button class="btn btn-primary" onclick="checkTemperature()">CHECK TEMPERATURE</button>
+            <div class="result-box" id="temp-result">Not Checked</div>
+            <p class="hint">Safe threshold: {{ threshold }}&deg;C (change it in Admin)</p>
+        </div>
+
+        <!-- STEP 3: MASK -->
+        <div class="sim-card">
+            <h3>03 / Mask detection</h3>
+            <div class="btn-row">
+                <button class="btn btn-success" onclick="checkMask(true)">MASK DETECTED</button>
+                <button class="btn btn-danger" onclick="checkMask(false)">NO MASK</button>
+            </div>
+            <div class="result-box" id="mask-result">Not Checked</div>
+        </div>
+
+        <!-- FINAL DECISION -->
+        <div class="sim-card final-card">
+            <h3>04 / Safety decision</h3>
+            <button class="btn btn-large" onclick="submitFinalDecision()">MAKE FINAL DECISION</button>
+            <div class="result-box result-box-large" id="final-result">Complete steps 1-3 first</div>
+            <button class="btn btn-reset" onclick="resetSimulation()">↺ Reset Simulation</button>
+        </div>
+    </div>
+
+    <!-- ============== RIGHT: LIVE DIGITAL TWIN ============== -->
+    <div class="sim-twin">
+        <div class="section-heading"><div><p class="kicker">Process monitor</p><h3>Live building view</h3></div><span class="live-tag"><i></i> Live</span></div>
+        <div class="building">
+            <div class="door-frame">
+                <div class="door" id="twin-door">
+                    <span id="door-icon">🚪</span>
+                    <span id="door-text">CLOSED</span>
+                </div>
+            </div>
+
+            <div class="twin-flow-vertical">
+                <div class="flow-step-v" id="flow-visitor">👤 Visitor</div>
+                <div class="flow-arrow-v">↓</div>
+                <div class="flow-step-v" id="flow-rfid">💳 RFID Scanner</div>
+                <div class="flow-arrow-v">↓</div>
+                <div class="flow-step-v" id="flow-auth">🔐 Authentication</div>
+                <div class="flow-arrow-v">↓</div>
+                <div class="flow-step-v" id="flow-temp">🌡️ Safety Check</div>
+                <div class="flow-arrow-v">↓</div>
+                <div class="flow-step-v" id="flow-mask-step">😷 Mask Check</div>
+                <div class="flow-arrow-v">↓</div>
+                <div class="flow-step-v" id="flow-door">🚪 Digital Door</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/simulation.js') }}"></script>
+{% endblock %}
